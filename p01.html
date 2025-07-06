@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Webcam Photo Capture with Download</title>
+  <style>
+    body { text-align: center; font-family: Arial; }
+    video, canvas { margin: 10px auto; display: block; }
+    button, a {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      text-decoration: none;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    a[download] {
+      background-color: #2196F3;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Webcam Photo Capture</h2>
+  
+  <video id="video" width="400" autoplay></video>
+  <button onclick="capturePhoto()">📸 Capture Photo</button>
+  <canvas id="canvas" width="400" height="300" style="display:none;"></canvas>
+  <a id="downloadLink" href="#" download="photo.png" style="display:none;">⬇️ Download Photo</a>
+
+  <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const downloadLink = document.getElementById('downloadLink');
+
+    // Start webcam
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+      })
+      .catch(error => {
+        alert('Webcam access denied or not available.');
+        console.error(error);
+      });
+
+    // Capture photo
+    function capturePhoto() {
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const imageDataURL = canvas.toDataURL('image/png');
+      downloadLink.href = imageDataURL;
+      downloadLink.style.display = 'inline-block';
+      canvas.style.display = 'block';
+    }
+  </script>
+
+</body>
+</html>
